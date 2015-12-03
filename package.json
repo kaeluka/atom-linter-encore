@@ -1,10 +1,9 @@
 {
   "name": "linter-encore",
   "main": "./lib/atom-linter-encore",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Linter backend using the encore typechecker",
-  "keywords": [
-  ],
+  "keywords": [],
   "activationCommands": {},
   "repository": "https://github.com/kaeluka/atom-linter-encore",
   "license": "MIT",
