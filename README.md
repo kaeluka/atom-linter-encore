@@ -1,2 +1,2 @@
-# atom-linter-encore
+# linter-encore
 Linter for the encore language
