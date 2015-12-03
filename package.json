@@ -1,7 +1,7 @@
 {
   "name": "linter-encore",
   "main": "./lib/atom-linter-encore",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Linter backend using the encore typechecker",
   "keywords": [],
   "activationCommands": {},
