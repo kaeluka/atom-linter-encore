@@ -57,9 +57,10 @@ module.exports = AtomLinterEncore =
                     line = parseInt(match[1])
                     col  = parseInt(match[2])
 
-                  output = output.replace('*** Error during typechecking ***', '').trim()
+                  #remove the first two lines that contain no useful information:
                   lines = output.split('\n')
-                  lines.splice(0,1)
+                  lines.splice(0,2)
+
                   output = lines.join('\n')
                   resolve [{
                     type: 'Error',
