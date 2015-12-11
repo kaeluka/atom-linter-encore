@@ -3,6 +3,7 @@
 - Error message instead of crash when `encorec` is not found
 - Adds parsing for multiple compiler messages.
 - Distinguishes between warnings and errors.
+- Adds the option to set a custom `encorec` path.
 
 ## 0.1.0 - First Release
 - Makes the linter work!

@@ -3,10 +3,13 @@
 class LinterEncore
   lintProcess: null
 
+  config: (key) ->
+    atom.config.get "linter-encore.#{key}"
+
   lint: (textEditor) =>
     return new Promise (resolve, reject) =>
       output = ''
-      command = 'encorec'
+      command = @config 'encorecPath'
       args = ['-tc', textEditor.getPath()]
       options = process.env
 

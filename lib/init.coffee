@@ -1,6 +1,12 @@
 {CompositeDisposable} = require 'atom'
 
 module.exports = AtomLinterEncore =
+  config:
+    encorecPath:
+      type: 'string'
+      default: 'encorec'
+      description: "Path to Encore's compiler `encorec`"
+
   activate: (state) ->
     console.log 'linter-encore: package loaded,
                 ready to get initialized by AtomLinter.'
@@ -10,8 +16,13 @@ module.exports = AtomLinterEncore =
       detail: '[linter-rust] `linter` package not found. \
       Please install https://github.com/AtomLinter/Linter'
 
+    @subscriptions = new CompositeDisposable
+
+    @subscriptions.add atom.config.observe 'linter-rust.rustcPath', (rustcPath) =>
+      @rustcPath = rustcPath
+
   deactivate: ->
-    console.log 'linter-encore: package deactivated.'
+    @subscriptions.dispose()
 
   serialize: ->
     atomLinterEncoreViewState: @atomLinterEncoreView.serialize()
