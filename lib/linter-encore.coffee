@@ -47,12 +47,10 @@ class LinterEncore
   generateMessage: (output, filePath) ->
     messageType = 'Warning'
     if /(Error)/.test(output[0])
-      match = output[1].match(/line ([0-9]+), column ([0-9]+)/)
-      output = output[2..]
-      messageType = 'Error'
-    else
-      match = output[0].match(/line ([0-9]+), column ([0-9]+)/)
       output = output[1..]
+      messageType = 'Error'
+
+    match = output[0].match(/line ([0-9]+), column ([0-9]+)/)
 
     if match
       line = parseInt(match[1])
@@ -60,7 +58,7 @@ class LinterEncore
 
     message = {
       type: messageType,
-      text: output.join('\n'),
+      text: output[1..].join('\n'),
       range:[[line-1,col], [line-1,col+5]],
       filePath: filePath
     }
