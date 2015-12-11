@@ -45,9 +45,11 @@ class LinterEncore
     return messages
 
   generateMessage: (output, filePath) ->
+    messageType = 'Warning'
     if /(Error)/.test(output[0])
       match = output[1].match(/line ([0-9]+), column ([0-9]+)/)
       output = output[2..]
+      messageType = 'Error'
     else
       match = output[0].match(/line ([0-9]+), column ([0-9]+)/)
       output = output[1..]
@@ -57,7 +59,7 @@ class LinterEncore
       col  = parseInt(match[2])
 
     message = {
-      type: 'Error',
+      type: messageType,
       text: output.join('\n'),
       range:[[line-1,col], [line-1,col+5]],
       filePath: filePath
