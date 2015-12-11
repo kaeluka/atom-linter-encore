@@ -31,26 +31,34 @@ class LinterEncore
 
   parse: (output, filePath) =>
     messages = []
-
     output = output.split('\n')
-    warningLines = (i for line, i in output when /line ([0-9]+), column ([0-9]+)/.test(line))
-    for i, warning of warningLines
-      if i is warningLines.length
+    warningLines = (i for line, i in output when /(Warning|Error)/.test(line))
+
+    i = 0
+    while i < warningLines.length
+      if i >= warningLines.length - 1
         messages.push @generateMessage output[warningLines[i]..], filePath
       else
-        messages.push @generateMessage output[warningLines[i]..warningLines[i+1]], filePath
+        messages.push @generateMessage output[warningLines[i]..warningLines[i+1]-1], filePath
+      i++
 
     return messages
 
   generateMessage: (output, filePath) ->
-    match = output[0].match(/line ([0-9]+), column ([0-9]+)/)
+    if /(Error)/.test(output[0])
+      match = output[1].match(/line ([0-9]+), column ([0-9]+)/)
+      output = output[2..]
+    else
+      match = output[0].match(/line ([0-9]+), column ([0-9]+)/)
+      output = output[1..]
+
     if match
       line = parseInt(match[1])
       col  = parseInt(match[2])
 
     message = {
       type: 'Error',
-      text: output[1..].join('\n'),
+      text: output.join('\n'),
       range:[[line-1,col], [line-1,col+5]],
       filePath: filePath
     }
