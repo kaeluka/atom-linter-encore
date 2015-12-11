@@ -48,8 +48,8 @@ module.exports = AtomLinterEncore =
               output += data
             stderr: (data) ->
               atom.notifications.addWarning data
-            exit: ->
-                if output is ''
+            exit: (code) ->
+                if code is 0
                   resolve []
                 else
                   match = output.match(/line ([0-9]+), column ([0-9]+)/)
