@@ -1,11 +1,10 @@
-# path = require 'path'
 {BufferedProcess} = require 'atom'
 
 class LinterEncore
   lintProcess: null
 
-  lint: (textEditor) ->
-    return new Promise (resolve, reject) ->
+  lint: (textEditor) =>
+    return new Promise (resolve, reject) =>
       output = ''
       command = 'encorec'
       args = ['-tc', textEditor.getPath()]
@@ -15,26 +14,12 @@ class LinterEncore
         output += data
       stderr = (data) ->
         atom.notifications.addWarning data
-      exit = (code) ->
+      exit = (code) =>
         if code is 0
           resolve []
         else
-          match = output.match(/line ([0-9]+), column ([0-9]+)/)
-          if match
-            line = parseInt(match[1])
-            col  = parseInt(match[2])
-
-          #remove the first two lines that contain no useful information:
-          lines = output.split('\n')
-          lines.splice(0,2)
-
-          output = lines.join('\n')
-          resolve [{
-            type: 'Error',
-            text: output,
-            range:[[line-1,col], [line-1,col+5]],
-            filePath: textEditor.getPath()
-          }]
+          messages = @parse output, textEditor.getPath()
+          resolve messages
 
       @lintProcess = new BufferedProcess({command, args, options, stdout, stderr, exit})
       @lintProcess.onWillThrowError ({error, handle}) ->
@@ -43,6 +28,27 @@ class LinterEncore
           dismissable: true
         handle()
         resolve []
+
+  parse: (output, filePath) =>
+    match = output.match(/line ([0-9]+), column ([0-9]+)/)
+    if match
+      line = parseInt(match[1])
+      col  = parseInt(match[2])
+
+    #remove the first two lines that contain no useful information:
+    lines = output.split('\n')
+    lines.splice(0,2)
+
+    output = lines.join('\n')
+    messages = [{
+      type: 'Error',
+      text: output,
+      range:[[line-1,col], [line-1,col+5]],
+      filePath: filePath
+    }]
+
+    return messages
+
 
 
 module.exports = LinterEncore
