@@ -62,7 +62,7 @@ class LinterEncore
     message = {
       type: messageType,
       text: output[1..].join('\n'),
-      range:[[line-1,col], [line-1,col+5]],
+      range:[[line-1,col-1], [line-1,col+5]],
       filePath: filePath
     }
 
